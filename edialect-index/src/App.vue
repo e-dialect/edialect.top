@@ -43,7 +43,7 @@
         </v-container>
       </v-main>
 
-      <v-footer app color="#2E2E2E" padless>
+      <v-footer color="#2E2E2E" padless>
         <v-container>
           <v-row justify="space-around" type="flex">
             <v-col cols="3">
