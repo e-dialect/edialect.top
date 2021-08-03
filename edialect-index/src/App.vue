@@ -1,32 +1,85 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <v-app>
+
+      <v-app-bar app color="green lighten-5">
+
+        <v-row class="align-center justify-start " flex>
+          <v-col cols="2">
+            <v-img
+                alt="E方言图标"
+                contain
+                height="64px"
+                src="@/assets/logo.png"
+            >
+            </v-img>
+          </v-col>
+          <v-col cols="6">
+            <v-tabs
+                v-model="tab"
+                align-with-title
+                background-color="transparent"
+            >
+              <v-tabs-slider color="yellow"></v-tabs-slider>
+              <v-tab
+                  v-for="item in list"
+                  :key="item"
+              >
+                {{ item }}
+              </v-tab>
+            </v-tabs>
+          </v-col>
+        </v-row>
+      </v-app-bar>
+
+
+      <!-- 根据应用组件来调整你的内容 -->
+      <v-main>
+        <!-- 给应用提供合适的间距 -->
+        <v-container class="background:0#1890FF" fluid>
+          <!-- 如果使用 vue-router -->
+          <router-view></router-view>
+        </v-container>
+      </v-main>
+
+      <v-footer app color="#2E2E2E" padless>
+        <v-container>
+          <v-row justify="space-around" type="flex">
+            <v-col cols="2">
+              <v-img contain max-width="240" src="@/assets/elogo.png"></v-img>
+            </v-col>
+            <v-col class="align-center justify-center" cols="7" style="color: white">
+              <h4> 相关网站：
+                <a href="https://www.ydict.net/" style="color: white">榕典</a> &#8194;|
+                <a href="https://www.moedict.tw/" style="color: white">萌典</a>&#8194;|
+                <a href="https://fangyan.xunfei.cn/#/" style="color: white">讯飞方言保护计划</a>&#8194;|
+                <a href="https://zhongguoyuyan.cn/" style="color: white">中国语言保护工程采录展示平台</a>
+              </h4>
+              <h4> 关于我们：
+                <router-link style="color: white" to="/about">团队介绍</router-link>&#8194;|
+                <router-link style="color: white" to="/contact">联系我们</router-link>&#8194;|
+                <a href="" style="color: white">Github</a>
+              </h4>
+              <h4>Copyrights © {{ new Date().getFullYear() }} Easy Dialect. All Rights Reserved.</h4>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-footer>
+    </v-app>
   </div>
+
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+
+<script>
+export default {
+  data: () => ({
+    list: [
+      "首页",
+      "介绍",
+      "关于"
+    ],
+    tab: null
+  }),
 }
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+</script>
