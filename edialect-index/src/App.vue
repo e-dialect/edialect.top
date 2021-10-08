@@ -45,23 +45,21 @@
 
       <v-footer color="#2E2E2E" padless>
         <v-container>
-          <v-row justify="space-around" type="flex">
+          <v-row justify="space-around" type="flex" align="center">
             <v-col cols="3">
               <v-img contain max-width="240" src="@/assets/elogo.png"></v-img>
             </v-col>
             <v-col class="align-center justify-center" cols="7" style="color: white">
-              <h4> 相关网站：
-                <a href="https://www.ydict.net/" style="color: white">榕典</a> &#8194;|
-                <a href="https://www.moedict.tw/" style="color: white">萌典</a>&#8194;|
-                <a href="https://fangyan.xunfei.cn/#/" style="color: white">讯飞方言保护计划</a>&#8194;|
-                <a href="https://zhongguoyuyan.cn/" style="color: white">中国语言保护工程采录展示平台</a>
-              </h4>
-              <h4> 关于我们：
-                <router-link style="color: white" to="/about">团队介绍</router-link>&#8194;|
-                <router-link style="color: white" to="/contact">联系我们</router-link>&#8194;|
-                <a href="" style="color: white">Github</a>
-              </h4>
-              <h4>Copyrights © {{ new Date().getFullYear() }} Easy Dialect. All Rights Reserved.</h4>
+              <div style=""> 相关网站：
+                <a href="https://www.ydict.net/" target="_blank" style="color: white">榕典</a> &#8194;|
+                <a href="https://www.moedict.tw/" target="_blank" style="color: white">萌典</a>&#8194;|
+                <a href="http://hinghwa.cn/" target="_blank" style="color: white">莆仙话词典</a>&#8194;|
+                <a href="https://zhongguoyuyan.cn/" target="_blank" style="color: white">中国语言保护工程采录展示平台</a>
+              </div>
+              <p>Copyrights © {{ new Date().getFullYear() }} Easy Dialect. All Rights Reserved.</p>
+              <a href="http://beian.miit.gov.cn" target="_blank" style="color:#C7C7C7">
+                闽ICP备2021006892号
+              </a>
             </v-col>
           </v-row>
         </v-container>
