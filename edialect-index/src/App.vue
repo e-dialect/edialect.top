@@ -53,7 +53,6 @@
               <div style=""> 相关网站：
                 <a href="https://www.ydict.net/" target="_blank" style="color: white">榕典</a> &#8194;|
                 <a href="https://www.moedict.tw/" target="_blank" style="color: white">萌典</a>&#8194;|
-                <a href="http://hinghwa.cn/" target="_blank" style="color: white">莆仙话词典</a>&#8194;|
                 <a href="https://zhongguoyuyan.cn/" target="_blank" style="color: white">中国语言保护工程采录展示平台</a>
               </div>
               <p>Copyrights © {{ new Date().getFullYear() }} Easy Dialect. All Rights Reserved.</p>
