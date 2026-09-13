@@ -55,7 +55,7 @@
                 <a href="https://www.moedict.tw/" target="_blank" style="color: white">萌典</a>&#8194;|
                 <a href="https://zhongguoyuyan.cn/" target="_blank" style="color: white">中国语言保护工程采录展示平台</a>
               </div>
-              <p>© {{ new Date().getFullYear() }} E-Dialect · AGPL-3.0-only</p>
+              <p>Copyrights © {{ new Date().getFullYear() }} Easy Dialect. All Rights Reserved.</p>
               <a href="http://beian.miit.gov.cn" target="_blank" style="color:#C7C7C7">
                 闽ICP备2021006892号
               </a>
