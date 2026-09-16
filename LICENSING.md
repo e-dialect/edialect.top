@@ -20,7 +20,9 @@ Third-party packages retain their upstream terms. The software license does not
 automatically cover text and media supplied by third parties, datasets,
 recordings, trademarks, logos, or other separately identified assets.
 Repository-specific content and image boundaries are listed in
-[`ASSET_BOUNDARIES.md`](./ASSET_BOUNDARIES.md).
+[`ASSET_BOUNDARIES.md`](./ASSET_BOUNDARIES.md). The review and independent
+rewrite of the dialect summaries are recorded in
+[`CONTENT_PROVENANCE.md`](./CONTENT_PROVENANCE.md).
 
 The runtime footer's “All Rights Reserved” statement concerns site content and
 brand assets to the extent rights are held; it does not restrict or override
@@ -40,7 +42,8 @@ project was not authorized to license.
 材料的逐路径完整权利证据；它不限制已就适用代码授予的 AGPL 权利。
 第三方软件包继续适用上游条款，代码许可证不自动授权第三方提供的文字和媒体、数据、
 录音、商标、Logo 或其他单独标识的资产；具体路径见
-[`ASSET_BOUNDARIES.md`](./ASSET_BOUNDARIES.md)。页面运行时页脚中的
+[`ASSET_BOUNDARIES.md`](./ASSET_BOUNDARIES.md)，方言简介的复核与独立重写记录见
+[`CONTENT_PROVENANCE.md`](./CONTENT_PROVENANCE.md)。页面运行时页脚中的
 “All Rights Reserved”仅指项目确有权利的站点内容与品牌资产，不限制或覆盖受
 `AGPL-3.0-only` 授权的软件代码。
 
