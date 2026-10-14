@@ -3,3 +3,8 @@ docs
 dist
 .vscode
 .idea
+.git
+.github
+.env
+.env.*
+release

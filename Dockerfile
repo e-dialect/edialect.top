@@ -3,9 +3,9 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY package*.json ./
 ENV NODE_ENV=production
-RUN yarn install --frozen-lockfile --production=false
+RUN npm ci --production=false --no-audit --no-fund
 COPY . .
-RUN yarn build
+RUN npm run build
 
 FROM nginx:stable-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
