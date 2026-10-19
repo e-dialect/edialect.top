@@ -9,22 +9,64 @@ import urllib.parse
 import urllib.request
 import uuid
 
+PORT = 8080
+RUNTIME_LIMITS = {
+    'capDrop': ['ALL'],
+    'securityOpt': ['no-new-privileges:true'],
+    'memoryBytes': 128 * 1024 * 1024,
+    'memorySwapBytes': 128 * 1024 * 1024,
+    'nanoCpus': 500_000_000,
+    'pidsLimit': 64,
+    'tmpfs': {'/tmp': 'rw,noexec,nosuid,size=32m'},
+}
+
 
 def docker(*args):
     return subprocess.check_output(['docker', *args], stderr=subprocess.PIPE, timeout=60).decode().strip()
+
+
+def numeric_nonroot_user(value):
+    parts = value.split(':') if isinstance(value, str) else []
+    return len(parts) == 2 and all(part.isdecimal() and int(part) > 0 for part in parts)
+
+
+def approved_exposed_ports(value):
+    allowed = (
+        {f'{PORT}/tcp': {}},
+        {'80/tcp': {}, f'{PORT}/tcp': {}},
+    )
+    return value in allowed
 
 
 def check(image, source_sha):
     info = json.loads(docker('image', 'inspect', image))[0]
     assert info['Os'] == 'linux' and info['Architecture'] == 'amd64'
     assert info['Config']['Labels']['org.opencontainers.image.revision'] == source_sha
+    assert numeric_nonroot_user(info['Config'].get('User'))
+    assert info['Config'].get('Volumes') in (None, {})
+    assert approved_exposed_ports(info['Config'].get('ExposedPorts'))
     name = 'homepage-smoke-' + uuid.uuid4().hex
     cid = name  # Also clean up if docker run times out after creating the container.
     result = {'result': 'FAIL', 'cleanup': 'PENDING', 'sourceSHA': source_sha, 'imageId': info['Id']}
     try:
         cid = docker('run', '-d', '--pull=never', '--name', name, '--label', 'edialect.homepage-smoke=' + name,
-                     '--memory', '128m', '--cpus', '1', '--pids-limit', '128', '-p', '127.0.0.1::80', info['Id'])
-        bound = json.loads(docker('inspect', cid))[0]['NetworkSettings']['Ports']['80/tcp']
+                     '--read-only', '--cap-drop=ALL', '--security-opt=no-new-privileges:true',
+                     '--memory=128m', '--memory-swap=128m', '--cpus=0.5', '--pids-limit=64',
+                     '--tmpfs=/tmp:rw,noexec,nosuid,size=32m',
+                     '-p', f'127.0.0.1::{PORT}', info['Id'])
+        container = json.loads(docker('inspect', cid))[0]
+        host = container['HostConfig']
+        assert container['Config'].get('User') == info['Config']['User']
+        assert host['ReadonlyRootfs'] is True
+        assert host['CapDrop'] == RUNTIME_LIMITS['capDrop']
+        assert host['SecurityOpt'] == RUNTIME_LIMITS['securityOpt']
+        assert host['Memory'] == RUNTIME_LIMITS['memoryBytes']
+        assert host['MemorySwap'] == RUNTIME_LIMITS['memorySwapBytes']
+        assert host['NanoCpus'] == RUNTIME_LIMITS['nanoCpus']
+        assert host['PidsLimit'] == RUNTIME_LIMITS['pidsLimit']
+        assert host['Tmpfs'] == RUNTIME_LIMITS['tmpfs']
+        assert not host.get('CapAdd') and not host.get('Binds') and not host.get('Devices')
+        bound = container['NetworkSettings']['Ports'][f'{PORT}/tcp']
         assert len(bound) == 1 and bound[0]['HostIp'] == '127.0.0.1'
         origin = 'http://127.0.0.1:' + bound[0]['HostPort']
         opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -61,7 +103,9 @@ def check(image, source_sha):
             assert not body.lstrip().lower().startswith((b'<!doctype html', b'<html'))
             counts[suffix] += 1
         assert counts['js'] and counts['css']
-        result.update(result='PASS', routes=routes, javaScriptAssets=counts['js'], cssAssets=counts['css'])
+        result.update(result='PASS', routes=routes, javaScriptAssets=counts['js'], cssAssets=counts['css'],
+                      containerPort=PORT, nonRoot=True, readOnlyRootFilesystem=True,
+                      runtimeLimits=RUNTIME_LIMITS)
     finally:
         if cid:
             docker('rm', '-f', cid)

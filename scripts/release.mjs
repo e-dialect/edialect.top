@@ -38,7 +38,14 @@ if (process.argv[2] === 'prepare') {
     platform: 'linux/amd64', ciRunId: Number(process.env.CI_RUN_ID),
     build: { 'edialect-index': {} },
     recovery: { kind: 'static', compatibility: 'stateless-image-only', rollbackSafe: true },
-    validation: { productionRuntime: { passed: true, imageConfigIDs: { 'edialect-index': configDigest } } },
+    validation: { productionRuntime: {
+      passed: true,
+      imageConfigIDs: { 'edialect-index': configDigest },
+      containerPort: receipt.containerPort,
+      nonRoot: receipt.nonRoot,
+      readOnlyRootFilesystem: receipt.readOnlyRootFilesystem,
+      runtimeLimits: receipt.runtimeLimits,
+    } },
     images: { 'edialect-index': { image, tag, digest, configDigest, platform: 'linux/amd64', revision: sha } },
   }
   await writeFile('release/release-manifest.json', JSON.stringify(manifest, null, 2) + '\n')

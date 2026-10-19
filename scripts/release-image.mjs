@@ -133,5 +133,17 @@ export function verifiedRuntimeImage(receipt, sourceSHA) {
   assert.ok(Number.isSafeInteger(receipt.javaScriptAssets) && receipt.javaScriptAssets > 0)
   assert.ok(Number.isSafeInteger(receipt.cssAssets) && receipt.cssAssets > 0)
   assert.match(receipt.imageId ?? '', /^sha256:[0-9a-f]{64}$/)
+  assert.equal(receipt.nonRoot, true)
+  assert.equal(receipt.readOnlyRootFilesystem, true)
+  assert.equal(receipt.containerPort, 8080)
+  assert.deepEqual(receipt.runtimeLimits, {
+    capDrop: ['ALL'],
+    securityOpt: ['no-new-privileges:true'],
+    memoryBytes: 128 * 1024 * 1024,
+    memorySwapBytes: 128 * 1024 * 1024,
+    nanoCpus: 500_000_000,
+    pidsLimit: 64,
+    tmpfs: { '/tmp': 'rw,noexec,nosuid,size=32m' },
+  })
   return receipt.imageId
 }

@@ -5,13 +5,28 @@ services:
     container_name: "${SERVICE_NAME}"
     labels:
       - "traefik.http.routers.${SERVICE_NAME}.rule=${HOST_ADDRESS}"
-      - "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=${PORT:-80}"
+      - "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=8080"
       - "traefik.http.routers.${SERVICE_NAME}.entrypoints=websecure"
       - "traefik.http.routers.${SERVICE_NAME}.tls=true"
       - "traefik.http.routers.${SERVICE_NAME}.middlewares=${SERVICE_NAME}-compress"
       - "traefik.http.middlewares.${SERVICE_NAME}-compress.compress=true"
     networks:
       - traefik-global-proxy
+    expose:
+      - "8080"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - "no-new-privileges:true"
+    mem_limit: 128m
+    memswap_limit: 128m
+    cpus: 0.5
+    pids_limit: 64
+    tmpfs:
+      - "/tmp:rw,noexec,nosuid,size=32m"
+    restart: unless-stopped
+    stop_grace_period: 30s
 
 networks:
   traefik-global-proxy:

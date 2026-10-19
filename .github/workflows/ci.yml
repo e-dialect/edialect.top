@@ -20,6 +20,7 @@ jobs:
         with:
           node-version: '22'
       - run: node --test scripts/release.test.mjs
+      - run: python3 -m unittest discover -s scripts -p 'test_check_runtime.py'
   image:
     name: Static image and routes
     runs-on: ubuntu-latest

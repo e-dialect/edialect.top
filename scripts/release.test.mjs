@@ -67,9 +67,25 @@ for (const [name, change, main, gate] of [
 }
 
 test('publication requires completed exact-SHA smoke with every route and asset kind', () => {
-  const good = { result: 'PASS', cleanup: 'PASS', sourceSHA: sha, routes: ['/', '/about', '/introduction'], javaScriptAssets: 3, cssAssets: 2, imageId: 'sha256:' + 'c'.repeat(64) }
+  const good = {
+    result: 'PASS', cleanup: 'PASS', sourceSHA: sha,
+    routes: ['/', '/about', '/introduction'], javaScriptAssets: 3, cssAssets: 2,
+    imageId: 'sha256:' + 'c'.repeat(64), containerPort: 8080,
+    nonRoot: true, readOnlyRootFilesystem: true,
+    runtimeLimits: {
+      capDrop: ['ALL'], securityOpt: ['no-new-privileges:true'],
+      memoryBytes: 128 * 1024 * 1024, memorySwapBytes: 128 * 1024 * 1024,
+      nanoCpus: 500_000_000, pidsLimit: 64,
+      tmpfs: { '/tmp': 'rw,noexec,nosuid,size=32m' },
+    },
+  }
   assert.equal(verifiedRuntimeImage(good, sha), good.imageId)
-  for (const change of [{ result: 'FAIL' }, { cleanup: 'FAIL' }, { sourceSHA: 'b'.repeat(40) }, { routes: ['/'] }, { cssAssets: 0 }, { javaScriptAssets: 0 }, { imageId: '' }]) {
+  for (const change of [
+    { result: 'FAIL' }, { cleanup: 'FAIL' }, { sourceSHA: 'b'.repeat(40) },
+    { routes: ['/'] }, { cssAssets: 0 }, { javaScriptAssets: 0 }, { imageId: '' },
+    { containerPort: 80 }, { nonRoot: false }, { readOnlyRootFilesystem: false },
+    { runtimeLimits: { ...good.runtimeLimits, pidsLimit: 128 } },
+  ]) {
     assert.throws(() => verifiedRuntimeImage({ ...good, ...change }, sha))
   }
 })
